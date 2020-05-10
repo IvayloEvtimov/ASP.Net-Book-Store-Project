@@ -11,6 +11,26 @@ namespace Project.Data
 
         }
 
-        public DbSet<Book> Book { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Stockpile> Stockpiles { get; set; }
+        public DbSet<Written_By> BookAuthors { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Author>().ToTable("Author");
+            modelBuilder.Entity<Book>().ToTable("Book");
+            modelBuilder.Entity<Customer>().ToTable("Customer");
+            modelBuilder.Entity<Genre>().ToTable("Genre");
+            modelBuilder.Entity<Order>().ToTable("Orders");
+            modelBuilder.Entity<Stockpile>().ToTable("Stockpile");
+            modelBuilder.Entity<Written_By>().ToTable("Written_By");
+
+            modelBuilder.Entity<Written_By>().HasKey(c => new { c.AuthorID, c.ISBN });
+
+        }
     }
 }
