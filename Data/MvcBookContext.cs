@@ -29,6 +29,8 @@ namespace Project.Data
             modelBuilder.Entity<Stockpile>().ToTable("Stockpile");
             modelBuilder.Entity<Written_By>().ToTable("Written_By");
 
+            modelBuilder.Entity<Book>().Property(b => b.Price).HasColumnType("float");
+
             modelBuilder.Entity<Written_By>().HasKey(c => new { c.AuthorID, c.ISBN });
 
         }

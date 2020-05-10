@@ -1,4 +1,7 @@
-﻿using Project.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Project.Models;
+using System;
 using System.Linq;
 
 namespace Project.Data
@@ -7,6 +10,9 @@ namespace Project.Data
 	{
 		public static void Initialize(MvcBookContext context)
 		{
+			//using var context = new MvcBookContext(serviceProvider.GetRequiredService<DbContextOptions<MvcBookContext>>());
+			context.Database.EnsureCreated();
+
 			if (context.Books.Any())
 			{
 				return;
@@ -15,22 +21,28 @@ namespace Project.Data
 
 			var Authors = new Models.Author[]
 			{
-			  new Author{Name="Джордж Р. Р. Мартин"},
-			  new Author{Name="Милко Палангурски"},
-			  new Author{Name="Пламен Павлов"},
-			  new Author{Name="Светлана Алексиевич"},
-			  new Author{Name="Христо Стоичков"},
-			  new Author{Name="Владимир Памуков"},
-			  new Author{Name="Анджей Сапковски"},
-			  new Author{Name="Робърт Кийосаки"},
-			  new Author{Name="Никола Бьогле"},
-			  new Author{Name="Дж. К. Роулинг"},
-			  new Author{Name="Димитър Бербатов"},
-			  new Author{Name="Ашли Ванс"},
-			  new Author{Name="Стивън Кинг"},
-			  new Author{Name="Мишел Обама"}
+				  new Author{Name="Джордж Р. Р. Мартин"},
+				  new Author{Name="Милко Палангурски"},
+				  new Author{Name="Пламен Павлов"},
+				  new Author{Name="Светлана Алексиевич"},
+				  new Author{Name="Христо Стоичков"},
+				  new Author{Name="Владимир Памуков"},
+				  new Author{Name="Анджей Сапковски"},
+				  new Author{Name="Робърт Кийосаки"},
+				  new Author{Name="Никола Бьогле"},
+				  new Author{Name="Дж. К. Роулинг"},
+				  new Author{Name="Димитър Бербатов"},
+				  new Author{Name="Ашли Ванс"},
+				  new Author{Name="Стивън Кинг"},
+				  new Author{Name="Мишел Обама"}
 			};
 
+			foreach (Author author in Authors)
+			{
+				context.Authors.Add(author);
+			}
+			context.SaveChanges();
+			 
 			var Genres = new Models.Genre[]
 			{
 				new Genre{Name="Приключенски"},
@@ -40,12 +52,16 @@ namespace Project.Data
 				new Genre{Name="Спорт"},
 				new Genre{Name="Финанси"},
 				new Genre{Name="Трилъри"},
-				new Genre{Name="Приключенски"},
 				new Genre{Name="Технологии"},
 				new Genre{Name="Хорър"},
 				new Genre{Name="Политика и политология"}
-
 			};
+
+			foreach (Genre genre in Genres)
+			{
+				context.Genres.Add(genre);
+			}
+			context.SaveChanges();
 
 			var Books = new Models.Book[]
 			{
@@ -141,8 +157,104 @@ namespace Project.Data
 				},
 				new Book{ISBN=9789542816355, Title="Светът на огън и лед", ReleaseYear=2014, GenreId=Genres.Single(i=>i.Name=="Фентъзи").ID, Price=39M, Pages=336,
 					Info="Светът на огън и лед – неразказаната история на Вестерос и Песен за огън и лед! Задължително четиво за всички почитатели на творчество на Джордж Мартин. Над 170 цветни илюстрации и тонове нова информация за Седемте кралства и Земите отвъд."
-				},
+				}
 			};
+
+			foreach (Book book in Books)
+			{
+				context.Books.Add(book);
+			}
+			context.SaveChanges();
+
+			var BookAuthors = new Written_By[]
+			{
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Огън и кръв").ISBN , AuthorID=Authors.Single(i=>i.Name=="Джордж Р. Р. Мартин").ID },
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Фермата - Алманах. История на българщината").ISBN, AuthorID=Authors.Single(i=>i.Name=="Милко Палангурски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Фермата - Алманах. История на българщината").ISBN, AuthorID=Authors.Single(i=>i.Name=="Пламен Павлов").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Чернобилска молитва").ISBN, AuthorID=Authors.Single(i=>i.Name=="Светлана Алексиевич").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Игра на тронове").ISBN, AuthorID=Authors.Single(i=>i.Name=="Джордж Р. Р. Мартин").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Сблъсък на крале").ISBN, AuthorID=Authors.Single(i=>i.Name=="Джордж Р. Р. Мартин").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вихър от мечове").ISBN, AuthorID=Authors.Single(i=>i.Name=="Джордж Р. Р. Мартин").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Пир за врани").ISBN, AuthorID=Authors.Single(i=>i.Name=="Джордж Р. Р. Мартин").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Танц с дракони").ISBN, AuthorID=Authors.Single(i=>i.Name=="Джордж Р. Р. Мартин").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Христо Стоичков. Историята").ISBN, AuthorID=Authors.Single(i=>i.Name=="Христо Стоичков").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Христо Стоичков. Историята").ISBN, AuthorID=Authors.Single(i=>i.Name=="Владимир Памуков").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вещерът 1: Последното желание").ISBN, AuthorID=Authors.Single(i=>i.Name=="Анджей Сапковски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вещерът 2: Меч на съдбата").ISBN, AuthorID=Authors.Single(i=>i.Name=="Анджей Сапковски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вещерът 3: Кръвта на елфите").ISBN, AuthorID=Authors.Single(i=>i.Name=="Анджей Сапковски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вещерът 4: Време на презрение").ISBN, AuthorID=Authors.Single(i=>i.Name=="Анджей Сапковски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вещерът 5: Огнено кръщение").ISBN,AuthorID=Authors.Single(i=>i.Name=="Анджей Сапковски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вещерът 6: Кулата на лястовицата").ISBN, AuthorID=Authors.Single(i=>i.Name=="Анджей Сапковски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вещерът 7: Господарката на езерото").ISBN, AuthorID=Authors.Single(i=>i.Name=="Анджей Сапковски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Вещерът: Сезонът на бурите").ISBN, AuthorID=Authors.Single(i=>i.Name=="Анджей Сапковски").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Богат татко, беден татко").ISBN, AuthorID=Authors.Single(i=>i.Name=="Робърт Кийосаки").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Пациент 488").ISBN,AuthorID=Authors.Single(i=>i.Name=="Никола Бьогле").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Хари Потър и Философският камък").ISBN, AuthorID=Authors.Single(i=>i.Name=="Дж. К. Роулинг").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Хари Потър и Стаята на тайните").ISBN, AuthorID=Authors.Single(i=>i.Name=="Дж. К. Роулинг").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Хари Потър и Затворникът от Азкабан").ISBN, AuthorID=Authors.Single(i=>i.Name=="Дж. К. Роулинг").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Хари Потър и Огненият бокал").ISBN, AuthorID=Authors.Single(i=>i.Name=="Дж. К. Роулинг").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Хари Потър и Орденът на феникса").ISBN, AuthorID=Authors.Single(i=>i.Name=="Дж. К. Роулинг").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Хари Потър и Нечистокръвния принц").ISBN, AuthorID=Authors.Single(i=>i.Name=="Дж. К. Роулинг").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Хари Потър и Даровете на Смъртта").ISBN, AuthorID=Authors.Single(i=>i.Name=="Дж. К. Роулинг").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Димитър Бербатов. По моя начин").ISBN, AuthorID=Authors.Single(i=>i.Name=="Димитър Бербатов").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Илън Мъск: PayPal, Tesla, SpaceX и походът към невероятното бъдеще").ISBN, AuthorID=Authors.Single(i=>i.Name=="Ашли Ванс").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Институтът").ISBN, AuthorID=Authors.Single(i=>i.Name=="Стивън Кинг").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Мишел Обама. Моята история").ISBN, AuthorID=Authors.Single(i=>i.Name=="Мишел Обама").ID},
+				new Written_By{ISBN=Books.Single(i=>i.Title=="Светът на огън и лед").ISBN, AuthorID=Authors.Single(i=>i.Name=="Джордж Р. Р. Мартин").ID}
+			};
+
+			foreach (Written_By bookAuthor in BookAuthors)
+			{
+				var bookAuthorsInDataBase = context.BookAuthors.Where(
+						s => s.ISBN == bookAuthor.ISBN && s.AuthorID == bookAuthor.AuthorID
+					).SingleOrDefault();
+				if (bookAuthorsInDataBase == null)
+				{
+					context.BookAuthors.Add(bookAuthor);
+				}
+			}
+			context.SaveChanges();
+
+			var Stockpiles = new Stockpile[]
+			{
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Огън и кръв").ISBN , Volume=10},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Фермата - Алманах. История на българщината").ISBN,Volume=2},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Чернобилска молитва").ISBN, Volume=1},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Игра на тронове").ISBN,Volume=10},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Сблъсък на крале").ISBN,Volume=10},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вихър от мечове").ISBN,Volume=10},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Пир за врани").ISBN,Volume=10},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Танц с дракони").ISBN,Volume=10},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Христо Стоичков. Историята").ISBN,Volume=3},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вещерът 1: Последното желание").ISBN,Volume=20},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вещерът 2: Меч на съдбата").ISBN,Volume=20},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вещерът 3: Кръвта на елфите").ISBN,Volume=20},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вещерът 4: Време на презрение").ISBN,Volume=20},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вещерът 5: Огнено кръщение").ISBN,Volume=20},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вещерът 6: Кулата на лястовицата").ISBN,Volume=20},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вещерът 7: Господарката на езерото").ISBN,Volume=20},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Вещерът: Сезонът на бурите").ISBN,Volume=20},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Богат татко, беден татко").ISBN,Volume=1},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Пациент 488").ISBN,Volume=4},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Хари Потър и Философският камък").ISBN,Volume=15},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Хари Потър и Стаята на тайните").ISBN,Volume= 15},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Хари Потър и Затворникът от Азкабан").ISBN,Volume=15},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Хари Потър и Огненият бокал").ISBN,Volume=15},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Хари Потър и Орденът на феникса").ISBN,Volume=15, },
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Хари Потър и Нечистокръвния принц").ISBN,Volume=15},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Хари Потър и Даровете на Смъртта").ISBN,Volume=15},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Димитър Бербатов. По моя начин").ISBN,Volume=1},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Илън Мъск: PayPal, Tesla, SpaceX и походът към невероятното бъдеще").ISBN,Volume=6},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Институтът").ISBN,Volume=2},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Мишел Обама. Моята история").ISBN,Volume=4},
+				new Stockpile{BookID=Books.Single(i=>i.Title=="Светът на огън и лед").ISBN,Volume=12}
+			};
+
+			foreach (Stockpile stockpile in Stockpiles)
+			{
+				context.Stockpiles.Add(stockpile);
+			}
+			context.SaveChanges();
 		}
 	}
 }

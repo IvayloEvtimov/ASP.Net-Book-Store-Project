@@ -10,23 +10,23 @@ using Project.Models;
 
 namespace Project.Controllers
 {
-    public class BooksController : Controller
+    public class StockpilesController : Controller
     {
         private readonly MvcBookContext _context;
 
-        public BooksController(MvcBookContext context)
+        public StockpilesController(MvcBookContext context)
         {
             _context = context;
         }
 
-        // GET: Books
+        // GET: Stockpiles
         public async Task<IActionResult> Index()
         {
-            var mvcBookContext = _context.Books.Include(b => b.Genre);
+            var mvcBookContext = _context.Stockpiles.Include(s => s.Book);
             return View(await mvcBookContext.ToListAsync());
         }
 
-        // GET: Books/Details/5
+        // GET: Stockpiles/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -34,42 +34,42 @@ namespace Project.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .Include(b => b.Genre)
-                .FirstOrDefaultAsync(m => m.ISBN == id);
-            if (book == null)
+            var stockpile = await _context.Stockpiles
+                .Include(s => s.Book)
+                .FirstOrDefaultAsync(m => m.BookID == id);
+            if (stockpile == null)
             {
                 return NotFound();
             }
 
-            return View(book);
+            return View(stockpile);
         }
 
-        // GET: Books/Create
+        // GET: Stockpiles/Create
         public IActionResult Create()
         {
-            ViewData["GenreId"] = new SelectList(_context.Genres, "ID", "ID");
+            ViewData["BookID"] = new SelectList(_context.Books, "ISBN", "ISBN");
             return View();
         }
 
-        // POST: Books/Create
+        // POST: Stockpiles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ISBN,Title,ReleaseYear,GenreId,Price,Pages,Info")] Book book)
+        public async Task<IActionResult> Create([Bind("BookID,Volume")] Stockpile stockpile)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(book);
+                _context.Add(stockpile);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GenreId"] = new SelectList(_context.Genres, "ID", "ID", book.GenreId);
-            return View(book);
+            ViewData["BookID"] = new SelectList(_context.Books, "ISBN", "ISBN", stockpile.BookID);
+            return View(stockpile);
         }
 
-        // GET: Books/Edit/5
+        // GET: Stockpiles/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -77,23 +77,23 @@ namespace Project.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
+            var stockpile = await _context.Stockpiles.FindAsync(id);
+            if (stockpile == null)
             {
                 return NotFound();
             }
-            ViewData["GenreId"] = new SelectList(_context.Genres, "ID", "ID", book.GenreId);
-            return View(book);
+            ViewData["BookID"] = new SelectList(_context.Books, "ISBN", "ISBN", stockpile.BookID);
+            return View(stockpile);
         }
 
-        // POST: Books/Edit/5
+        // POST: Stockpiles/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("ISBN,Title,ReleaseYear,GenreId,Price,Pages,Info")] Book book)
+        public async Task<IActionResult> Edit(long id, [Bind("BookID,Volume")] Stockpile stockpile)
         {
-            if (id != book.ISBN)
+            if (id != stockpile.BookID)
             {
                 return NotFound();
             }
@@ -102,12 +102,12 @@ namespace Project.Controllers
             {
                 try
                 {
-                    _context.Update(book);
+                    _context.Update(stockpile);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookExists(book.ISBN))
+                    if (!StockpileExists(stockpile.BookID))
                     {
                         return NotFound();
                     }
@@ -118,11 +118,11 @@ namespace Project.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GenreId"] = new SelectList(_context.Genres, "ID", "ID", book.GenreId);
-            return View(book);
+            ViewData["BookID"] = new SelectList(_context.Books, "ISBN", "ISBN", stockpile.BookID);
+            return View(stockpile);
         }
 
-        // GET: Books/Delete/5
+        // GET: Stockpiles/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -130,31 +130,31 @@ namespace Project.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .Include(b => b.Genre)
-                .FirstOrDefaultAsync(m => m.ISBN == id);
-            if (book == null)
+            var stockpile = await _context.Stockpiles
+                .Include(s => s.Book)
+                .FirstOrDefaultAsync(m => m.BookID == id);
+            if (stockpile == null)
             {
                 return NotFound();
             }
 
-            return View(book);
+            return View(stockpile);
         }
 
-        // POST: Books/Delete/5
+        // POST: Stockpiles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var book = await _context.Books.FindAsync(id);
-            _context.Books.Remove(book);
+            var stockpile = await _context.Stockpiles.FindAsync(id);
+            _context.Stockpiles.Remove(stockpile);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(long id)
+        private bool StockpileExists(long id)
         {
-            return _context.Books.Any(e => e.ISBN == id);
+            return _context.Stockpiles.Any(e => e.BookID == id);
         }
     }
 }
