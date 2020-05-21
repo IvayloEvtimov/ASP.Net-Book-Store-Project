@@ -1,8 +1,36 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Project.Models.Book>
+
+@{
+		ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="static about-sec">
+	<div class="container">
+		<h2>Books</h2>
+		<div class="recent-book-sec">
+			<div class="row">
+				@foreach (var item in Model)
+				{
+					<div class="col-md-3">
+						<div class="item">
+
+							@{
+								var src=Html.DisplayFor(modelItem => item.Cover);
+								}
+								
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
+									<img src="~/images/Covers/@src"/>
+									<h3>@Html.DisplayFor(modelItem => item.Title)</h3>
+									<h6><span class="price">@Html.DisplayFor(modelItem=> item.Price)</span></h6>
+								</a>
+								
+							</div>
+						</div>
+				}
+			</div>
+			<div class="btn-sec">
+				<a href="products.html" class="btn gray-btn">load More books</a>
+			</div>
+		</div>
+	</div>
+</section>
