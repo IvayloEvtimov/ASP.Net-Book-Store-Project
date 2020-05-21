@@ -22,6 +22,7 @@ namespace Project.Models
 		public decimal Price { get; set; }
 		public int Pages { get; set; }
 		public string Info { get; set; }
+		public string Cover{get;set;}
 
 		public Genre Genre { get; set; }
 		public Stockpile Stockpile { get; set; }
