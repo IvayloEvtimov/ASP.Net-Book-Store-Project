@@ -16,6 +16,7 @@ namespace Project.Models
         public string TelephoneNumber { get; set; }
 
         public ICollection<Order> Orders { get; set; }
+		public ICollection<Cart> Carts { get; set; }
 
     }
 }

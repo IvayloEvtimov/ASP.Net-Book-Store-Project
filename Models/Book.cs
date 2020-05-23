@@ -22,6 +22,7 @@ namespace Project.Models
 		public Stockpile Stockpile { get; set; }
 
 		public ICollection<Order> Orders { get; set; }
+		public ICollection<Cart> Carts { get; set; }
 	}
 
 }

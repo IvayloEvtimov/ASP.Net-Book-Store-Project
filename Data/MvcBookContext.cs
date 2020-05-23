@@ -18,6 +18,7 @@ namespace Project.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Stockpile> Stockpiles { get; set; }
         public DbSet<Written_By> BookAuthors { get; set; }
+		public DbSet<Cart> Carts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,10 +29,13 @@ namespace Project.Data
             modelBuilder.Entity<Order>().ToTable("Orders");
             modelBuilder.Entity<Stockpile>().ToTable("Stockpile");
             modelBuilder.Entity<Written_By>().ToTable("Written_By");
+			modelBuilder.Entity<Cart>().ToTable("Cart");
 
             modelBuilder.Entity<Book>().Property(b => b.Price).HasColumnType("float");
 
             modelBuilder.Entity<Written_By>().HasKey(c => new { c.AuthorID, c.ISBN });
+
+			modelBuilder.Entity<Cart>().HasKey(c => new { c.Customer_ID, c.ISBN });
 
         }
     }
