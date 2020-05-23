@@ -29,6 +29,24 @@ namespace Project.Controllers
 						return View(await mvcBookContext.ToListAsync());
 				}
 
+				public async Task<IActionResult> BookInfo(long? id)
+				{
+					if(id == null)
+					{
+						return NotFound();
+					}
+
+					var book=await _context.Books.Include(b => b.Genre).FirstOrDefaultAsync(m => m.ISBN==id);
+					if(book ==null)
+					{
+						return NotFound();
+					}
+					
+					return View(book);
+				}
+
+
+
 				public IActionResult Privacy()
 				{
 						return View();
