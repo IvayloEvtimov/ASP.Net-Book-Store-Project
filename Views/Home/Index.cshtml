@@ -18,7 +18,7 @@
 								var src=Html.DisplayFor(modelItem => item.Cover);
 								}
 								
-								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
+								<a class="nav-link text-dark" asp-action="BookInfo" asp-route-id="@item.ISBN">
 									<img src="~/images/Covers/@src"/>
 									<h3>@Html.DisplayFor(modelItem => item.Title)</h3>
 									<h6><span class="price">@Html.DisplayFor(modelItem=> item.Price)</span></h6>
