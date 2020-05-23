@@ -41,6 +41,8 @@ namespace Project.Data
 			modelBuilder.Entity<Cart>().HasOne(c => c.Customer).WithMany(c => c.Carts).HasForeignKey(c => c.Customer_ID);
 			modelBuilder.Entity<Cart>().HasOne(c => c.Book).WithMany(c => c.Carts).HasForeignKey(c => c.ISBN);
 
+			modelBuilder.Entity<Order>().HasOne(c => c.Book).WithMany(c => c.Orders).HasForeignKey(c => c.BookId);
+			modelBuilder.Entity<Order>().HasOne(c => c.Customer).WithMany(c => c.Orders).HasForeignKey(c => c.CustomerId);	
 
         }
     }
