@@ -1,0 +1,33 @@
+@model IEnumerable<Project.Models.Cart>
+
+@{
+	ViewData["Title"]="Shopping Cart";
+}
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>@Html.DisplayNameFor(item => item.ISBN);</th>
+			<th>@Html.DisplayNameFor(item => item.Volume);</th>
+			<th>@Html.DisplayNameFor(item => item.Book.Price);</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var item in Model)
+		{
+			<tr>
+				<td>
+					@{
+						var scr=@Html.DisplayFor(modelItem => item.Book.Cover);
+					}
+					<img src="~/images/Covers/@scr" alt="">
+					<h5>@Html.DisplayFor(modelItem => item.Book.Title)</h5>
+				</td>
+				<td>@Html.DisplayFor(modelItem => item.Book.Price)</td>
+				<td>@Html.DisplayFor(modelItem => item.Volume)</td>
+				
+			</tr>
+		}
+	</tbody>
+
+</table>
