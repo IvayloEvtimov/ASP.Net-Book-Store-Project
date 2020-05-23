@@ -33,7 +33,9 @@ namespace Project.Data
 
             modelBuilder.Entity<Book>().Property(b => b.Price).HasColumnType("float");
 
-            modelBuilder.Entity<Written_By>().HasKey(c => new { c.AuthorID, c.ISBN });
+            modelBuilder.Entity<Written_By>().HasKey(c => new { c.ISBN, c.AuthorID });
+			modelBuilder.Entity<Written_By>().HasOne(bc => bc.Book).WithMany(c => c.BookAuthors).HasForeignKey(bc => bc.ISBN);
+			modelBuilder.Entity<Written_By>().HasOne(bc => bc.Author).WithMany(c => c.Written_Books).HasForeignKey(bc => bc.AuthorID);
 
 			modelBuilder.Entity<Cart>().HasKey(c => new { c.Customer_ID, c.ISBN });
 

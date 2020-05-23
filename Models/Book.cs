@@ -23,6 +23,7 @@ namespace Project.Models
 
 		public ICollection<Order> Orders { get; set; }
 		public ICollection<Cart> Carts { get; set; }
+		public ICollection<Written_By> BookAuthors { get; set;}
 	}
 
 }
