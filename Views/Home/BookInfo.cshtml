@@ -1,0 +1,36 @@
+@model Project.Models.Book
+
+@{
+	ViewData["Title"] = "Book Info";
+}
+
+<section class="product-sec">
+		<div class="container">
+			<h1>
+				@Html.DisplayFor(item => item.Title)
+			</h1>
+			<div class="row">
+				<div class="col-md-6 slider-sec">
+
+					@{
+						var src=@Html.DisplayFor(item => item.Cover);
+					}
+
+					 <img src="~/images/Covers/@src" class="img-fluid">
+				</div>
+				<div class="col-md-6 slider-content">
+					<p>@Html.DisplayFor(item => item.Info)</p>
+					<ul>
+						<li>
+							<span class="name">Цена</span><span class="clm">:</span>
+							<span class="price">@Html.DisplayFor(item => item.Price)</span>
+						</li>
+					</ul>
+					<div class="btn-sec">
+						<button class="btn ">Add To cart</button>
+						<button class="btn black">Buy Now</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
