@@ -45,7 +45,12 @@ namespace Project.Controllers
 					return View(book);
 				}
 
+				public async Task<IActionResult> Cart()
+				{
+					var MvcBookContext = _context.Carts.Include(c => c.Book).AsNoTracking();
+					return View(await MvcBookContext.ToListAsync());
 
+				}
 
 				public IActionResult Privacy()
 				{
