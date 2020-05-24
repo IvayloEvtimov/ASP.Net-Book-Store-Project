@@ -4,30 +4,67 @@
 	ViewData["Title"]="Shopping Cart";
 }
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>@Html.DisplayNameFor(item => item.ISBN);</th>
-			<th>@Html.DisplayNameFor(item => item.Volume);</th>
-			<th>@Html.DisplayNameFor(item => item.Book.Price);</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach(var item in Model)
-		{
-			<tr>
-				<td>
-					@{
-						var scr=@Html.DisplayFor(modelItem => item.Book.Cover);
+	  <section class="cart_area section_padding">
+		<div class="container">
+		  <div class="cart_inner">
+			<div class="table-responsive">
+			  <table class="table">
+				<thead>
+				  <tr>
+					<th scope="col">@Html.DisplayNameFor(model => model.Book)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.Book.Price)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.Volume)</th>
+					@* <th scope="col">Total</th> *@
+				  </tr>
+				</thead>
+				<tbody>
+					@foreach(var item in Model){
+						<tr>
+							<td>
+								<div class="media">
+									<div class="d-flex">
+										@{
+											var src=@Html.DisplayFor(modelItem => item.Book.Cover);
+										}
+										<img src="~/images/Covers/@src" alt="" />
+										</div>
+										<div class="media-body">
+										<p>@Html.DisplayFor(modelItem => item.Book.Title)</p>
+									</div>
+								</div>
+							</td>
+							<td>
+								<h5>@Html.DisplayFor(modelItem => item.Book.Price)</h5>
+							</td>
+							<td>
+							<div class="product_count">
+								@* <span class="input-number-decrement"> <i class="ti-minus"></i></span> *@
+								<input class="input-number" type="text" value="1" min="0" max="10">
+								@* <span class="input-number-increment"> <i class="ti-plus"></i></span> *@
+							</div>
+							</td>
+							@* <td>
+								<h5>$720.00</h5>
+							</td> *@
+						</tr>
 					}
-					<img src="~/images/Covers/@scr" alt="">
-					<h5>@Html.DisplayFor(modelItem => item.Book.Title)</h5>
-				</td>
-				<td>@Html.DisplayFor(modelItem => item.Book.Price)</td>
-				<td>@Html.DisplayFor(modelItem => item.Volume)</td>
-				
-			</tr>
-		}
-	</tbody>
 
-</table>
+				  @* <tr>
+					<td></td>
+					<td></td>
+					<td>
+					  <h5>Subtotal</h5>
+					</td>
+					<td>
+					  <h5>$2160.00</h5>
+					</td>
+				  </tr> *@
+				</tbody>
+			  </table>
+			  <div class="checkout_btn_inner float-right">
+				<a class="btn_1" asp-action="Index">Continue Shopping</a>
+				<a class="btn_1 checkout_btn_1" href="#">Proceed to Order</a>
+			  </div>
+			</div>
+		  </div>
+	  </section>	

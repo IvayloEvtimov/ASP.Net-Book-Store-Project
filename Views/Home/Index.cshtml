@@ -4,33 +4,49 @@
 		ViewData["Title"] = "Home Page";
 }
 
-<section class="static about-sec">
-	<div class="container">
-		<h2>Books</h2>
-		<div class="recent-book-sec">
-			<div class="row">
-				@foreach (var item in Model)
-				{
-					<div class="col-md-3">
-						<div class="item">
-
-							@{
-								var src=Html.DisplayFor(modelItem => item.Cover);
-								}
-								
-								<a class="nav-link text-dark" asp-action="BookInfo" asp-route-id="@item.ISBN">
-									<img src="~/images/Covers/@src"/>
-									<h3>@Html.DisplayFor(modelItem => item.Title)</h3>
-									<h6><span class="price">@Html.DisplayFor(modelItem=> item.Price)</span></h6>
-								</a>
-								
+<main>      
+		<div class="popular-items section-padding30">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-xl-7 col-lg-8 col-md-10">
+						<div class="section-tittle mb-70 text-center">
+							<h2>Popular Items</h2>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					@foreach (var item in Model)
+					{
+						<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+							<div class="single-popular-items mb-50 text-center">
+								<div class="popular-img">
+									@{
+										var src=@Html.DisplayFor(modelItem => item.Cover);
+									}
+									<a asp-action="BookInfo" asp-route-id="@item.ISBN"> <img src="~/images/Covers/@src" alt=""></a>
+									<div class="img-cap">
+										<form asp-controller="Home" asp-action="AddToCart">
+											<span>
+												<button type="submit" name="BookId" value="@item.ISBN">Add to cart</button>
+											</span>
+										</form>
+									</div>
+									<div class="favorit-items">
+										<span class="flaticon-heart"></span>
+									</div>
+								</div>
+								<div class="popular-caption">
+									@* TODO: Add asp-action *@
+									<h3><a asp-action="BookInfo" asp-route-id="@item.ISBN">@Html.DisplayFor(modelItem => item.Title)</a></h3>
+									<span>@Html.DisplayFor(modelItem => item.Price)</span>
+								</div>
 							</div>
 						</div>
-				}
-			</div>
-			<div class="btn-sec">
-				<a href="products.html" class="btn gray-btn">load More books</a>
+						
+					}
+					
 			</div>
 		</div>
-	</div>
-</section>
+
+	</main>
+
