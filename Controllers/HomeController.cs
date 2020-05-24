@@ -20,7 +20,7 @@ namespace Project.Controllers
 				public HomeController(MvcBookContext context,ILogger<HomeController> logger)
 				{
 					_context = context;
-								_logger=logger;
+					_logger=logger;
 				}
 
 				public async Task<IActionResult> Index()
