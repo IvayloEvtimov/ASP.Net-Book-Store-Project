@@ -19,14 +19,36 @@ namespace Project.Controllers
 
 				public HomeController(MvcBookContext context,ILogger<HomeController> logger)
 				{
-            _context = context;
-						_logger=logger;
-        }
+					_context = context;
+								_logger=logger;
+				}
 
 				public async Task<IActionResult> Index()
 				{
 						var mvcBookContext = _context.Books.Include(b => b.Genre);
 						return View(await mvcBookContext.ToListAsync());
+				}
+
+				[HttpPost]
+				[ValidateAntiForgeryToken]
+				public async Task<IActionResult> AddToCart(string BookId)
+				{
+					try
+					{
+						if(ModelState.IsValid){
+							// TODO: Add dynamic user id
+							long ISBN = long.Parse(BookId);
+							Cart cart = new Cart{Customer_ID=1,ISBN=ISBN};
+							_context.Add(cart);
+							await _context.SaveChangesAsync();
+						}
+					}catch(DbUpdateException )
+					{
+						ModelState.AddModelError("", "Unable to add to Cart. " + "Try again, and if the problem persists " + 
+												"see your system administrator.");
+					}
+
+					return RedirectToAction(nameof(Index));
 				}
 
 				public async Task<IActionResult> BookInfo(long? id)
