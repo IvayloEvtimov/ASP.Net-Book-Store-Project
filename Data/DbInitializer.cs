@@ -286,6 +286,28 @@ namespace Project.Data
 				context.Stockpiles.Add(stockpile);
 			}
 			context.SaveChanges();
+
+			var Customers= new Customer[]
+			{
+					new Customer{Name="Customer1", Email="Customer1@gmail.com",TelephoneNumber="123456"}
+			};
+
+			foreach(Customer customer in Customers)
+			{
+				context.Customers.Add(customer);
+			}
+			context.SaveChanges();
+
+			var Carts= new Cart[]
+			{
+				new Cart{Customer_ID=1, ISBN=9786191642977,Volume=1}
+			};
+
+			foreach(Cart cart in Carts)
+			{
+				context.Carts.Add(cart);
+			}
+			context.SaveChanges();
 		}
 	}
 }
