@@ -2,6 +2,7 @@
 
 @{
 	ViewData["Title"]="Shopping Cart";
+	int totalCost=0;
 }
 
 	  <section class="cart_area section_padding">
@@ -34,36 +35,71 @@
 								</div>
 							</td>
 							<td>
-								<h5>@Html.DisplayFor(modelItem => item.Book.Price)</h5>
+								<h5>@Html.DisplayFor(modelItem => item.Book.Price) BGN</h5>
 							</td>
 							<td>
 							<div class="product_count">
-								@* <span class="input-number-decrement"> <i class="ti-minus"></i></span> *@
-								<input class="input-number" type="text" value="1" min="0" max="10">
-								@* <span class="input-number-increment"> <i class="ti-plus"></i></span> *@
+								<label class="input-number">x @Html.DisplayFor(modelItem => item.Volume)</label>
 							</div>
 							</td>
-							@* <td>
-								<h5>$720.00</h5>
-							</td> *@
+
 						</tr>
 					}
-
-				  @* <tr>
-					<td></td>
-					<td></td>
-					<td>
-					  <h5>Subtotal</h5>
-					</td>
-					<td>
-					  <h5>$2160.00</h5>
-					</td>
-				  </tr> *@
 				</tbody>
 			  </table>
 			  <div class="checkout_btn_inner float-right">
-				<a class="btn_1" asp-action="Index">Continue Shopping</a>
-				<a class="btn_1 checkout_btn_1" href="#">Proceed to Order</a>
+					<a class="btn_1" asp-action="Index">Continue Shopping</a>
+
+
+
+					<a data-fancybox data-src="#modal" href="javascript:;"  class="btn_1 checkout_btn_1" >Proceed to Order</a>
+
+						<div style="display: none;" id="modal">
+									<div class="order_box">
+										<h2>Your Order</h2>
+										<ul class="list">
+										<li>
+											<a href="#">Product
+											<span>Total</span>
+											</a>
+										</li>
+										@foreach (var item in Model)
+										{
+											<li>
+												<a asp-action="BookInfo" asp-route-id="@item.ISBN">
+													@Html.DisplayFor(modelItem => item.Book.Title)
+
+													<span class="middle">x 	@Html.DisplayFor(modelItem => item.Volume)</span>
+													@{
+														var cost=item.Book.Price*item.Volume;
+														totalCost+=(int) cost;
+													}
+
+													<span class="last">@cost BGN</span>
+												</a>
+											</li>	
+										}
+										
+										</ul>
+										<ul class="list list_2">
+										<li>
+											<a href="#">Total
+											<span>@totalCost BGN</span>
+											</a>
+										</li>
+										</ul>
+										<p>
+											Please send a check to Store Name, Store Street, Store Town,
+											Store State / County, Store Postcode.
+										</p>
+										</div>
+										<a class="btn_3" style="margin-top: 10px" href="#">Proceed to Paypal</a>
+									</div>
+
+						</div>
+
+
+
 			  </div>
 			</div>
 		  </div>
