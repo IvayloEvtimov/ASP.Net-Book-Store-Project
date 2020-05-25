@@ -20,7 +20,7 @@ namespace Project.Controllers
 				public HomeController(MvcBookContext context,ILogger<HomeController> logger)
 				{
 					_context = context;
-					_logger=logger;
+					_logger = logger;
 				}
 
 				public async Task<IActionResult> Index()
@@ -58,7 +58,9 @@ namespace Project.Controllers
 						return NotFound();
 					}
 
-					var book=await _context.Books.Include(b => b.Genre).FirstOrDefaultAsync(m => m.ISBN==id);
+					var book = await _context.Books.Include(i => i.BookAuthors).ThenInclude(i => i.Author)
+					.Include(i => i.Genre).FirstOrDefaultAsync(m => m.ISBN == id);
+
 					if(book ==null)
 					{
 						return NotFound();
