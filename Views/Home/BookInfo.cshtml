@@ -14,6 +14,7 @@
 
 					@{
 						var src=@Html.DisplayFor(item => item.Cover);
+						var authors="";
 					}
 
 					 <img src="~/images/Covers/@src" class="img-fluid">
@@ -21,8 +22,15 @@
 				<div class="col-md-6 slider-content">
 					<p>@Html.DisplayFor(item => item.Info)</p>
 					<ul>
+						<li> 
+							@foreach (var item in Model.BookAuthors)
+							{
+								authors += @item.Author.Name.ToString() + ", ";
+							}
+							<span>??????: @authors</span>
+						</li>
 						<li>
-							<span class="name">Цена</span><span class="clm">:</span>
+							<span class="name">????</span><span class="clm">:</span>
 							<span class="price">@Html.DisplayFor(item => item.Price)</span>
 						</li>
 					</ul>
