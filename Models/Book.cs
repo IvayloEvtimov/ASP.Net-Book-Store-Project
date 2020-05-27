@@ -12,6 +12,8 @@ namespace Project.Models
 
 		[Display(Name ="Release Year")]
 		public int ReleaseYear { get; set; }
+
+		[ForeignKey("Genre")]
 		public int GenreId { get; set; }
 		public decimal Price { get; set; }
 		public int Pages { get; set; }
@@ -21,9 +23,9 @@ namespace Project.Models
 		public Genre Genre { get; set; }
 		public Stockpile Stockpile { get; set; }
 
-		public ICollection<Order> Orders { get; set; }
-		public ICollection<Cart> Carts { get; set; }
-		public ICollection<Written_By> BookAuthors { get; set;}
+		public virtual ICollection<Order> Orders { get; set; }
+		public virtual ICollection<Cart> Carts { get; set; }
+		public virtual ICollection<Written_By> BookAuthors { get; set;}
 	}
 
 }
