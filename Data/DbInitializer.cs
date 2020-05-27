@@ -308,6 +308,15 @@ namespace Project.Data
 				context.Carts.Add(cart);
 			}
 			context.SaveChanges();
+			var Orders = new Order[]
+			{
+				new Order{ID=1,BookId = Books.Single(i=>i.Title=="Огън и кръв").BookId , CustomerId=1,Address="address1",Date=new DateTime(500000000)}
+			};
+			foreach(Order order in Orders)
+			{
+				context.Orders.Add(order);
+			}
+			context.SaveChanges();
 		}
 	}
 }
