@@ -289,7 +289,7 @@ namespace Project.Data
 
 			var Customers= new Customer[]
 			{
-					new Customer{Name="Customer1", Email="Customer1@gmail.com",TelephoneNumber="123456"}
+					new Customer{Name="Customer1", Email="Customer1@gmail.com",TelephoneNumber="123456", Password="password"}
 			};
 
 			foreach(Customer customer in Customers)
@@ -308,10 +308,12 @@ namespace Project.Data
 				context.Carts.Add(cart);
 			}
 			context.SaveChanges();
+
 			var Orders = new Order[]
 			{
-				new Order{ID=1,BookId = Books.Single(i=>i.Title=="Огън и кръв").BookId , CustomerId=1,Address="address1",Date=new DateTime(500000000)}
+				new Order{BookId = 9789542701514 , CustomerId=1,Address="address1",Date=new DateTime(500000000)}
 			};
+
 			foreach(Order order in Orders)
 			{
 				context.Orders.Add(order);
