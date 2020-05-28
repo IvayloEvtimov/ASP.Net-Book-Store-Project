@@ -11,6 +11,7 @@ namespace Project.Models
 		public int ID { get; set; }
 		public long BookId { get; set; }
 		public int CustomerId { get; set; }
+		public int Amount { get; set; }
 		public string Address { get; set; }
 
 		[DataType(DataType.Date)]
