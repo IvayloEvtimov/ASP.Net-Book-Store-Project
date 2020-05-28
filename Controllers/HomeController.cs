@@ -1,10 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Project.Data;
 using Project.Models;
@@ -87,6 +87,61 @@ namespace Project.Controllers
 		{
 			return View();
 		}
+
+		public IActionResult Login()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Login(long? id)
+		{
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					var user = await _context.Customers.FirstOrDefaultAsync(model => model.Email == Request.Form["Email"].ToString());
+					var password = Request.Form["Password"].ToString();
+			
+					if(user != null)
+					{
+
+						HashAlgorithm hashAlg = new SHA256CryptoServiceProvider();
+						// Convert the data to hash to an array of Bytes.
+						byte[] bytValue = System.Text.Encoding.UTF8.GetBytes(password);
+						// Compute the Hash. This returns an array of Bytes.
+						byte[] bytHash = hashAlg.ComputeHash(bytValue);
+						// Optionally, represent the hash value as a base64-encoded string, 
+						// For example, if you need to display the value or transmit it over a network.
+						string base64 = Convert.ToBase64String(bytHash);
+
+						if (user.Password == base64)
+						{
+							HttpContext.Session.SetString("Email", user.Email);
+							HttpContext.Session.SetString("Email", user.Name);
+
+							var mvcBookContext = _context.Books.Include(b => b.Genre);
+							return View("Index",await mvcBookContext.ToListAsync());
+						}
+					}
+				}catch(Exception ex)
+				{
+					ModelState.AddModelError("", "Unable to Login. " + "Try again, and if the problem persists " +
+						"see your system administrator.");
+				}
+
+			}
+			return NotFound();
+		}
+
+		public async Task<IActionResult> Logout()
+		{
+			HttpContext.Session.Clear();
+			var mvcBookContext = _context.Books.Include(b => b.Genre);
+			return View(nameof(Index), await mvcBookContext.ToListAsync());
+		}
+
+
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
