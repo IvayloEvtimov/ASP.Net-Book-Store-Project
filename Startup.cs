@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 using Project.Data;
+using System;
 
 namespace Project
 {
@@ -22,6 +23,9 @@ namespace Project
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
+			services.AddSession(options => {
+				options.IdleTimeout = TimeSpan.FromMinutes(120); 
+			});
 
 			services.AddDbContext<MvcBookContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MvcBookContext")));
 		}
@@ -43,8 +47,7 @@ namespace Project
 			app.UseStaticFiles();
 
 			app.UseRouting();
-
-			app.UseAuthorization();
+			app.UseSession();
 
 			app.UseEndpoints(endpoints =>
 			{
