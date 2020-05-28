@@ -58,10 +58,13 @@ namespace Project.Controllers
 		// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("ISBN,Title,ReleaseYear,GenreId,Price,Pages,Info,Cover")] Book book)
+		public async Task<IActionResult> Create([Bind("BookId,Title,ReleaseYear,Genre,Price,Pages,Info,Cover")] Book book)
 		{
 			if (ModelState.IsValid)
 			{
+				var genre = await _context.Genres.AsNoTracking().FirstOrDefaultAsync(model => model.Name == Request.Form["Genre"].ToString());
+				book.GenreId=genre.ID;
+				// book.Genre=genre;
 				_context.Add(book);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
@@ -80,7 +83,7 @@ namespace Project.Controllers
 			}
 
 			// var book = await _context.Books.FindAsync(id);
-			var book = await _context.Books.AsNoTracking().FirstOrDefaultAsync(b => b.ISBN == id);
+			var book = await _context.Books.Include(b => b.Genre).AsNoTracking().FirstOrDefaultAsync(b => b.ISBN == id);
 			if (book == null)
 			{
 				return NotFound();
@@ -106,6 +109,9 @@ namespace Project.Controllers
 			{
 				try
 				{
+									
+					var genre = await _context.Genres.FirstOrDefaultAsync(model => model.Name == Request.Form["Genre"].ToString());
+					book.GenreId=genre.ID;
 					_context.Update(book);
 					await _context.SaveChangesAsync();
 				}
@@ -122,38 +128,9 @@ namespace Project.Controllers
 				}
 				return RedirectToAction(nameof(Index));
 			}
-			ViewData["GenreId"] = new SelectList(_context.Genres, "ID", "ID", book.GenreId);
+			//ViewData["GenreId"] = new SelectList(_context.Genres, "ID", "ID", book.GenreId);
+			PopulateGenreDropDownList();
 			return View(book);
-		}
-
-		[HttpPost, ActionName("Edit")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> EditPost(long? id)
-		{
-		  if (id == null)
-		  {
-			return NotFound();
-		  }
-
-		  var bookToUpdate = await _context.Books.FirstOrDefaultAsync(b => b.ISBN == id);
-
-		  if(await TryUpdateModelAsync<Book>(bookToUpdate, "", b => b.Title, b => b.ReleaseYear, b => b.ReleaseYear , b => b.GenreId, b => b.Price, b => b.Pages, b => b.Cover))
-		  {
-			try
-			{
-			  await _context.SaveChangesAsync();
-			}
-			catch(DbUpdateException ex)
-			{
-			  ModelState.AddModelError("", "Unable to save changes. " +
-				"Try again, and if the problem persists, " +
-				"see your system administrator.");
-			}
-			return RedirectToAction(nameof(Index));
-		  }
-		  PopulateGenreDropDownList(bookToUpdate.GenreId);
-		  return View(bookToUpdate);	
-		  
 		}
 
 		// GET: Books/Delete/5
@@ -193,11 +170,12 @@ namespace Project.Controllers
 
 		private void PopulateGenreDropDownList(object SelectedGenre = null)
 		{
-		  if(SelectedGenre!=null)
-		  {
-			  ViewBag.Selected=SelectedGenre;
-		  }
-		  ViewBag.Genres= (from g in _context.Genres select g).Include(b => b.Books).ToArray();
+			if(SelectedGenre!=null)
+			{
+				ViewBag.Selected=SelectedGenre;
+			}
+
+			ViewBag.Genres= (from g in _context.Genres orderby g.ID select g).Include(b => b.Books).ToArray();
 		} 
 	}
 }
