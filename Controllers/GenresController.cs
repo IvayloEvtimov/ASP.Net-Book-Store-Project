@@ -22,6 +22,7 @@ namespace Project.Controllers
         // GET: Genres
         public async Task<IActionResult> Index()
         {
+			
             return View(await _context.Genres.ToListAsync());
         }
 
