@@ -1,10 +1,14 @@
-﻿using System;
+﻿	using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Project.Data;
 using Project.Models;
@@ -25,8 +29,30 @@ namespace Project.Controllers
 
 		public async Task<IActionResult> Index()
 		{
+			LoadAuthors();
 			var mvcBookContext = _context.Books.Include(b => b.Genre);
 			return View(await mvcBookContext.ToListAsync());
+		}
+
+		public async Task<IActionResult> Filter(string SearchString, String[] selectedAuthors)
+		{
+			ViewData["CurrentFilter"] = SearchString;
+
+			var WrittenBooks = (from model in _context.BookAuthors select model).Include(model => model.Book);
+
+			List<String> Authors = new List<string>(selectedAuthors);
+			IQueryable<Written_By> item= _context.BookAuthors;
+
+			if (!String.IsNullOrEmpty(SearchString) && Authors!=null)
+			{
+				item = WrittenBooks.Where(model => Authors.Contains(model.Author.Name) || model.Book.Title.Contains(SearchString));
+			}else if (!String.IsNullOrEmpty(SearchString) && Authors==null)
+			{
+				item = WrittenBooks.Where(model => Authors.Contains(model.Author.Name));
+			}
+
+			LoadAuthors();
+			return View(nameof(Index),item.Select(model => model.Book));
 		}
 
 		[HttpPost]
@@ -139,6 +165,12 @@ namespace Project.Controllers
 			HttpContext.Session.Clear();
 			var mvcBookContext = _context.Books.Include(b => b.Genre);
 			return View(nameof(Index), await mvcBookContext.ToListAsync());
+		}
+
+		private void LoadAuthors()
+		{
+			var authors = _context.Authors.ToArray();
+			ViewBag.Authors = authors;
 		}
 
 

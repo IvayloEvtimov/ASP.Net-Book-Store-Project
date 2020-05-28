@@ -1,53 +1,80 @@
 ﻿@model IEnumerable<Project.Models.Book>
 
 @{
-		ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
-<main>      
-		<div class="popular-items section-padding30">
-		<button class="btn text-center">Filter</button>
-			<div class="container">
-				<div class="row justify-content-center">
-					<div class="col-xl-7 col-lg-8 col-md-10">
-						<div class="section-tittle mb-70 text-center">
-							<h2>Popular Items</h2>
-						</div>
+<main>
+	<div class="popular-items section-padding30">
+		<a data-fancybox data-src="#modal" href="javascript:;" class="btn_1 checkout_btn_1">Filter</a>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-xl-7 col-lg-8 col-md-10">
+					<div class="section-tittle mb-70 text-center">
+						<h2>Popular Items</h2>
 					</div>
 				</div>
-				<div class="row">
-					@foreach (var item in Model)
-					{
-						<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-							<div class="single-popular-items mb-50 text-center">
-								<div class="popular-img">
-									@{
-										var src=@Html.DisplayFor(modelItem => item.Cover);
-									}
-									<a asp-action="BookInfo" asp-route-id="@item.ISBN"> <img src="~/images/Covers/@src" alt=""></a>
-									<div class="img-cap">
-										<form asp-controller="Home" asp-action="AddToCart">
-											<span>
-												<button type="submit" name="BookId" value="@item.ISBN">Add to cart</button>
-											</span>
-										</form>
-									</div>
-									<div class="favorit-items">
-										<span class="flaticon-heart"></span>
-									</div>
+			</div>
+			<div class="row">
+				@foreach (var item in Model)
+				{
+					<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+						<div class="single-popular-items mb-50 text-center">
+							<div class="popular-img">
+								@{
+									var src = @Html.DisplayFor(modelItem => item.Cover);
+								}
+								<a asp-action="BookInfo" asp-route-id="@item.ISBN"> <img src="~/images/Covers/@src" alt=""></a>
+								<div class="img-cap">
+									<form asp-controller="Home" asp-action="AddToCart">
+										<span>
+											<button type="submit" name="BookId" value="@item.ISBN">Add to cart</button>
+										</span>
+									</form>
 								</div>
-								<div class="popular-caption">
-									@* TODO: Add asp-action *@
-									<h3><a asp-action="BookInfo" asp-route-id="@item.ISBN">@Html.DisplayFor(modelItem => item.Title)</a></h3>
-									<span>@Html.DisplayFor(modelItem => item.Price)</span>
+								<div class="favorit-items">
+									<span class="flaticon-heart"></span>
 								</div>
 							</div>
+							<div class="popular-caption">
+								@* TODO: Add asp-action *@
+								<h3><a asp-action="BookInfo" asp-route-id="@item.ISBN">@Html.DisplayFor(modelItem => item.Title)</a></h3>
+								<span>@Html.DisplayFor(modelItem => item.Price)</span>
+							</div>
 						</div>
-						
-					}
-					
+					</div>
+
+				}
+
 			</div>
 		</div>
 
-	</main>
+
+		<div style="display: none;" id="modal">
+			<form asp-action="Filter" method="get">
+                <div class="form-actions no-color">
+                    <p>
+                        Find by name: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+                    </p>
+                    <ul>
+                        @{
+                            foreach (var author in ViewBag.Authors)
+                            {
+                                @:<li>
+                                    <input type="checkbox" name="selectedAuthors" value="@author.Name" />
+                                    @author.Name
+                                @:</li>
+                            }
+
+                        }
+                    </ul>
+                    <input type="submit" value="Search" class="btn" />
+                </div>
+			</form>
+			
+		</div>
+
+</main>
+
+
 
