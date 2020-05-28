@@ -289,7 +289,7 @@ namespace Project.Data
 
 			var Customers= new Customer[]
 			{
-					new Customer{Name="Customer1", Email="Customer1@gmail.com",TelephoneNumber="123456", Password="password"}
+					new Customer{Name="Customer1", Email="Customer1@gmail.com",TelephoneNumber="123456",Password="XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg="}
 			};
 
 			foreach(Customer customer in Customers)
