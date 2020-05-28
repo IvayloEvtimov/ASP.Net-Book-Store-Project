@@ -16,6 +16,17 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
+		<dt class = "col-sm-2">
+			@Html.DisplayNameFor(model => model.Written_Books)
+		</dt>
+		<dd class="col-sm-10">
+			@{
+				foreach(var book in Model.Written_Books)
+				{
+					@book.Book.Title <br/>
+				}
+			}
+		</dd>
     </dl>
 </div>
 <div>
