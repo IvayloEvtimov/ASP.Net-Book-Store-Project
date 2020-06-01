@@ -146,6 +146,7 @@ namespace Project.Controllers
 							HttpContext.Session.SetString("Email", user.Email);
 							HttpContext.Session.SetString("Email", user.Name);
 
+							LoadAuthors();
 							var mvcBookContext = _context.Books.Include(b => b.Genre);
 							return View("Index",await mvcBookContext.ToListAsync());
 						}
