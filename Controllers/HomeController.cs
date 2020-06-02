@@ -30,7 +30,7 @@ namespace Project.Controllers
 		public async Task<IActionResult> Index()
 		{
 			LoadAuthors();
-			var mvcBookContext = _context.Books.Include(b => b.Genre);
+			var mvcBookContext = _context.Books.Include(model => model.Genre).Include(model => model.Stockpile);
 			return View(await mvcBookContext.ToListAsync());
 		}
 
@@ -119,14 +119,9 @@ namespace Project.Controllers
 				.ToListAsync().Result[0];
 			var MvcBookContext = (from model in _context.Carts where model.Customer_ID== Customer_ID select model)
 				.Include(model => model.Book).ToListAsync();
-			var MvcBookContext1 = _context.Carts.Include(c => c.Book).AsNoTracking().ToListAsync();
+			var MvcBookContext1 = _context.Carts.Include(model => model.Book).AsNoTracking().ToListAsync();
 			return View(await MvcBookContext);
 
-		}
-
-		public IActionResult Privacy()
-		{
-			return View();
 		}
 
 		public IActionResult About()
