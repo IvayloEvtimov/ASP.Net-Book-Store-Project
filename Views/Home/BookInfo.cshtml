@@ -27,17 +27,15 @@
 							{
 								authors += @item.Author.Name.ToString() + ", ";
 							}
-							<span>??????: @authors</span>
+							<span>Автори: @authors</span>
 						</li>
 						<li>
-							<span class="name">????</span><span class="clm">:</span>
+							<span class="name"> Цена: </span><span class="clm">:</span>
 							<span class="price">@Html.DisplayFor(item => item.Price)</span>
 						</li>
 					</ul>
 					<div class="btn-sec">
-						<button class="btn ">Add To cart</button>
-						<button class="btn black">Buy Now</button>
-					</div>
+						<button class="btn" asp-action="AddToCart">Добави към кошница</button>					</div>
 				</div>
 			</div>
 		</div>
