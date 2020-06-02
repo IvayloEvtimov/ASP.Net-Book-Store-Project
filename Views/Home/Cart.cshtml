@@ -60,7 +60,7 @@
 									<span>Total</span>
 									</a>
 								</li>
-								@foreach (var item in Model)
+								@foreach (Cart item in Model)
 								{
 									<li>
 										<a asp-action="BookInfo" asp-route-id="@item.ISBN">
@@ -88,7 +88,14 @@
 								Моля въведете коректен адрес и дата за доставка.
 							</p>
 						</div>
-						<a class="btn_3" style="margin-top: 10px" asp-controller="Orders" asp-action="Create">Въвеждане на Адрес и Дата</a>
+						@{
+							int Customer_ID=0;
+							if(Model.Count() != 0)
+							{
+								Customer_ID = Model.ElementAt(0).Customer_ID;
+							}
+						}
+						<a class="btn_3" style="margin-top: 10px" asp-controller="Orders" asp-action="Create" asp-route-id=@Customer_ID >Въвеждане на Адрес и Дата</a>
 					</div>
 				</div>
 			</div>
