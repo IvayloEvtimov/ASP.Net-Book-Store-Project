@@ -37,9 +37,8 @@
 								</div>
 							</div>
 							<div class="popular-caption">
-								@* TODO: Add asp-action *@
 								<h3><a asp-action="BookInfo" asp-route-id="@item.ISBN">@Html.DisplayFor(modelItem => item.Title)</a></h3>
-								<span>@Html.DisplayFor(modelItem => item.Price)</span>
+								<span>@Html.DisplayFor(modelItem => item.Price) BGN</span>
 							</div>
 						</div>
 					</div>
