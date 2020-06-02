@@ -31,19 +31,19 @@ namespace Project.Data
 			modelBuilder.Entity<Written_By>().ToTable("Written_By");
 			modelBuilder.Entity<Cart>().ToTable("Cart");
 
-			modelBuilder.Entity<Book>().Property(b => b.Price).HasColumnType("float");
-			modelBuilder.Entity<Book>().HasOne(c => c.Genre).WithMany(c => c.Books).IsRequired();
+			modelBuilder.Entity<Book>().Property(model => model.Price).HasColumnType("float");
+			modelBuilder.Entity<Book>().HasOne(model => model.Genre).WithMany(model => model.Books).IsRequired();
 
-			modelBuilder.Entity<Written_By>().HasKey(c => new { c.ISBN, c.AuthorID });
-			modelBuilder.Entity<Written_By>().HasOne(c => c.Book).WithMany(c => c.BookAuthors).HasForeignKey(bc => bc.ISBN);
-			modelBuilder.Entity<Written_By>().HasOne(c => c.Author).WithMany(c => c.Written_Books).HasForeignKey(bc => bc.AuthorID);
+			modelBuilder.Entity<Written_By>().HasKey(model => new { model.ISBN, model.AuthorID });
+			modelBuilder.Entity<Written_By>().HasOne(model => model.Book).WithMany(model => model.BookAuthors).HasForeignKey(model => model.ISBN);
+			modelBuilder.Entity<Written_By>().HasOne(model => model.Author).WithMany(model => model.Written_Books).HasForeignKey(model => model.AuthorID);
 
-			modelBuilder.Entity<Cart>().HasKey(c => new { c.Customer_ID, c.ISBN });
-			modelBuilder.Entity<Cart>().HasOne(c => c.Customer).WithMany(c => c.Carts).HasForeignKey(c => c.Customer_ID);
-			modelBuilder.Entity<Cart>().HasOne(c => c.Book).WithMany(c => c.Carts).HasForeignKey(c => c.ISBN);
+			modelBuilder.Entity<Cart>().HasKey(model => new { model.Customer_ID, model.ISBN });
+			modelBuilder.Entity<Cart>().HasOne(model => model.Customer).WithMany(model => model.Carts).HasForeignKey(model => model.Customer_ID);
+			modelBuilder.Entity<Cart>().HasOne(model => model.Book).WithMany(model => model.Carts).HasForeignKey(model => model.ISBN);
 
-			modelBuilder.Entity<Order>().HasOne(c => c.Book).WithMany(c => c.Orders).HasForeignKey(c => c.BookId);
-			modelBuilder.Entity<Order>().HasOne(c => c.Customer).WithMany(c => c.Orders).HasForeignKey(c => c.CustomerId);	
+			modelBuilder.Entity<Order>().HasOne(model => model.Book).WithMany(model => model.Orders).HasForeignKey(model => model.BookId);
+			modelBuilder.Entity<Order>().HasOne(model => model.Customer).WithMany(model => model.Orders).HasForeignKey(model => model.CustomerId);	
 
 		}
 	}
