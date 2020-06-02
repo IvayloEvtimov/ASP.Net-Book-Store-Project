@@ -12,7 +12,7 @@
 					<div class="login_part_text_iner">
 						<h2>Нов потербител?</h2>
 						<p>Влезнетее в системата за да можете да поръчвате книги</p>
-						<a asp-area="" asp-controller="Customer" asp-action="Create" class="btn_3">Създай потербител</a>
+						<a asp-area="" asp-controller="Customers" asp-action="Create" class="btn_3">Създай потербител</a>
 					</div>
 				</div>
 			</div>
@@ -29,10 +29,6 @@
 								<input asp-for="Password" type="password" class="form-control" id="password" name="password" value="" placeholder="Парола">
 							</div>
 							<div class="col-md-12 form-group">
-								<div class="creat_account d-flex align-items-center">
-									<input asp-for="RememberMe" type="checkbox" id="f-option" name="selector">
-									<label asp-for="RememberMe" for="f-option">Запомни ме</label>
-								</div>
 								<button type="submit" value="submit" class="btn_3">Влизане</button>
 							</div>
 						</form>
