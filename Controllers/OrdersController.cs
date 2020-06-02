@@ -53,23 +53,6 @@ namespace Project.Controllers
 			return View();
 		}
 
-		// POST: Orders/Create
-		// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-		// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-		//[HttpPost]
-		//[ValidateAntiForgeryToken]
-		//public async Task<IActionResult> Create([Bind("ID,BookId,CustomerId,Address,Date")] Order order)
-		//{
-		//    if (ModelState.IsValid)
-		//    {
-		//        _context.Add(order);
-		//        await _context.SaveChangesAsync();
-		//        return RedirectToAction(nameof(Index));
-		//    }
-		//    ViewData["CustomerId"] = new SelectList(_context.Customers, "ID", "ID", order.CustomerId);
-		//    return View(order);
-		//}
-
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(int? id, string Address)
@@ -77,11 +60,12 @@ namespace Project.Controllers
 			if(id == null)
 				return NotFound();
 
-			var Customer = await _context.Customers.FirstOrDefaultAsync(model => model.Email == HttpContext.Session.GetString("Email"));
+			var Customer = await _context.Customers.Include(model => model.Carts)
+				.FirstOrDefaultAsync(model => model.Email == HttpContext.Session.GetString("Email"));
 			if (Customer == null)
 				return NotFound();
 
-			var CustomerCart = await (from model in _context.Carts where model.Customer_ID == Customer.ID select model).ToListAsync();
+			var CustomerCart = Customer.Carts;
 			if (CustomerCart == null)
 				return NotFound();
 
@@ -92,12 +76,19 @@ namespace Project.Controllers
 					BookId = cart.ISBN,
 					CustomerId = Customer.ID,
 					Address = Address,
+					Amount=cart.Volume,
 					Date = Convert.ToDateTime(Request.Form["Date"].ToString())
 				};
 
+				var Stockpile = (from model in _context.Stockpiles where model.BookID==cart.ISBN select model).ToListAsync().Result[0];
+				if(Stockpile.Volume < order.Amount){
+					return NotFound("Not enough amount");
+				}
 				_context.Add(order);
+				_context.Remove(cart);
+				Stockpile.Volume-=order.Amount;
 			}
-			_context.Remove(CustomerCart);
+			// _context.Remove(CustomerCart);
 			await _context.SaveChangesAsync();
 
 			return RedirectToAction("Index", "Home");
