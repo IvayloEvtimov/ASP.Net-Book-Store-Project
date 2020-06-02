@@ -34,13 +34,13 @@ namespace Project.Controllers
 			return View(await mvcBookContext.ToListAsync());
 		}
 
-		public async Task<IActionResult> Filter(string SearchString, String[] selectedAuthors)
+		public IActionResult Filter(String SearchString, String[] selectedAuthors)
 		{
 			ViewData["CurrentFilter"] = SearchString;
 
 			var WrittenBooks = (from model in _context.BookAuthors select model).Include(model => model.Book);
 
-			List<String> Authors = new List<string>(selectedAuthors);
+			List<String> Authors = new List<String>(selectedAuthors);
 			IQueryable<Written_By> item= _context.BookAuthors;
 
 			if (!String.IsNullOrEmpty(SearchString) && Authors!=null)
@@ -60,13 +60,25 @@ namespace Project.Controllers
 		public async Task<IActionResult> AddToCart(string BookId)
 		{
 			try
-			{
+			{				
 				if (ModelState.IsValid)
 				{
-					// TODO: Add dynamic user id
+					if(HttpContext.Session.Get("Email") == null){
+						throw new ArgumentException("No logged user");
+					}
+
 					long ISBN = long.Parse(BookId);
-					Cart cart = new Cart { Customer_ID = 1, ISBN = ISBN };
-					_context.Add(cart);
+					string Customer_Email=HttpContext.Session.GetString("Email");
+					Task<Customer> Customer = _context.Customers.FirstOrDefaultAsync(model => model.Email == Customer_Email);
+					var ExistingCart = _context.Carts.FirstOrDefaultAsync(model => model.Customer_ID == Customer.Result.ID && model.ISBN==ISBN);
+					if(ExistingCart.Result != null)
+					{
+						ExistingCart.Result.Volume+=1;
+					}else
+					{
+						Cart cart = new Cart { Customer_ID = Customer.Result.ID, ISBN = ISBN, Volume=1 };
+						_context.Add(cart);
+					}
 					await _context.SaveChangesAsync();
 				}
 			}
@@ -76,6 +88,9 @@ namespace Project.Controllers
 										"see your system administrator.");
 			}
 
+			// LoadAuthors();
+			// var mvcBookContext = _context.Books.Include(b => b.Genre);
+			// return View("Index",await mvcBookContext.ToListAsync());
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -99,8 +114,13 @@ namespace Project.Controllers
 
 		public async Task<IActionResult> Cart()
 		{
-			var MvcBookContext = _context.Carts.Include(c => c.Book).AsNoTracking();
-			return View(await MvcBookContext.ToListAsync());
+			string Customer_Email = HttpContext.Session.GetString("Email");
+			var Customer_ID = (from model in _context.Customers where model.Email == Customer_Email select model.ID)
+				.ToListAsync().Result[0];
+			var MvcBookContext = (from model in _context.Carts where model.Customer_ID== Customer_ID select model)
+				.Include(model => model.Book).ToListAsync();
+			var MvcBookContext1 = _context.Carts.Include(c => c.Book).AsNoTracking().ToListAsync();
+			return View(await MvcBookContext);
 
 		}
 
@@ -144,14 +164,14 @@ namespace Project.Controllers
 						if (user.Password == base64)
 						{
 							HttpContext.Session.SetString("Email", user.Email);
-							HttpContext.Session.SetString("Email", user.Name);
+							HttpContext.Session.SetString("Name", user.Name);
 
 							LoadAuthors();
 							var mvcBookContext = _context.Books.Include(b => b.Genre);
 							return View("Index",await mvcBookContext.ToListAsync());
 						}
 					}
-				}catch(Exception ex)
+				}catch(Exception )
 				{
 					ModelState.AddModelError("", "Unable to Login. " + "Try again, and if the problem persists " +
 						"see your system administrator.");
