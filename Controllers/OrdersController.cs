@@ -82,7 +82,7 @@ namespace Project.Controllers
 
 				var Stockpile = (from model in _context.Stockpiles where model.BookID==cart.ISBN select model).ToListAsync().Result[0];
 				if(Stockpile.Volume < order.Amount){
-					return NotFound("Not enough amount");
+					continue;
 				}
 				_context.Add(order);
 				_context.Remove(cart);
