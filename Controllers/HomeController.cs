@@ -30,28 +30,58 @@ namespace Project.Controllers
 		public async Task<IActionResult> Index()
 		{
 			LoadAuthors();
+<<<<<<< HEAD
 			var mvcBookContext = _context.Books.Include(model => model.Genre).Include(model => model.Stockpile);
+=======
+			LoadGenres();
+			var mvcBookContext = _context.Books.Include(b => b.Genre);
+>>>>>>> 0d0de22b9107871631f2af6ed296194c10d2fde9
 			return View(await mvcBookContext.ToListAsync());
 		}
 
-		public IActionResult Filter(String SearchString, String[] selectedAuthors)
+		public IActionResult Filter(String SearchString, String[] selectedAuthors, String[] selectedGenres)
 		{
 			ViewData["CurrentFilter"] = SearchString;
 
 			var WrittenBooks = (from model in _context.BookAuthors select model).Include(model => model.Book);
 
 			List<String> Authors = new List<String>(selectedAuthors);
+			List<String> Genres = new List<string>(selectedGenres);
 			IQueryable<Written_By> item= _context.BookAuthors;
+			
 
-			if (!String.IsNullOrEmpty(SearchString) && Authors!=null)
+			if (!String.IsNullOrEmpty(SearchString) && Authors!=null && Genres==null)
 			{
 				item = WrittenBooks.Where(model => Authors.Contains(model.Author.Name) || model.Book.Title.Contains(SearchString));
-			}else if (!String.IsNullOrEmpty(SearchString) && Authors==null)
+
+			}else if (!String.IsNullOrEmpty(SearchString) && Authors==null && Genres==null)
 			{
 				item = WrittenBooks.Where(model => Authors.Contains(model.Author.Name));
+
+			}else if(String.IsNullOrEmpty(SearchString) && Authors!=null && Genres==null)
+			{
+				item = WrittenBooks.Where(model => Authors.Contains(model.Author.Name));
+
+			}else if(!String.IsNullOrEmpty(SearchString) && Authors!=null && Genres !=null)
+			{
+				item = WrittenBooks.Where(model => Authors.Contains(model.Author.Name) || model.Book.Title.Contains(SearchString) || Genres.Contains(model.Book.Genre.Name));
+			
+			}else if(String.IsNullOrEmpty(SearchString) && Authors!=null && Genres !=null)
+			{
+				item = WrittenBooks.Where(model => Authors.Contains(model.Author.Name) || Genres.Contains(model.Book.Genre.Name));
+			
+			}else if(!String.IsNullOrEmpty(SearchString) && Authors==null && Genres !=null)
+			{
+				item = WrittenBooks.Where(model => model.Book.Title.Contains(SearchString) || Genres.Contains(model.Book.Genre.Name));
+			
+			}else if(String.IsNullOrEmpty(SearchString) && Authors==null && Genres !=null)
+			{
+				item = WrittenBooks.Where(model => Genres.Contains(model.Book.Genre.Name));
 			}
 
+
 			LoadAuthors();
+			LoadGenres();
 			return View(nameof(Index),item.Select(model => model.Book));
 		}
 
@@ -162,6 +192,7 @@ namespace Project.Controllers
 							HttpContext.Session.SetString("Name", user.Name);
 
 							LoadAuthors();
+							LoadGenres();
 							var mvcBookContext = _context.Books.Include(b => b.Genre);
 							return View("Index",await mvcBookContext.ToListAsync());
 						}
@@ -187,6 +218,12 @@ namespace Project.Controllers
 		{
 			var authors = _context.Authors.ToArray();
 			ViewBag.Authors = authors;
+		}
+
+		private void LoadGenres()
+		{
+			var genres = _context.Genres.ToArray();
+			ViewBag.Genres = genres;
 		}
 
 

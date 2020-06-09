@@ -56,24 +56,38 @@
 
 		<div style="display: none;" id="modal">
 			<form asp-action="Filter" method="get">
-                <div class="form-actions no-color">
-                    <p>
-                        Find by name: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-                    </p>
-                    <ul>
-                        @{
-                            foreach (var author in ViewBag.Authors)
-                            {
-                                @:<li>
-                                    <input type="checkbox" name="selectedAuthors" value="@author.Name" />
-                                    @author.Name
-                                @:</li>
-                            }
-
-                        }
-                    </ul>
-                    <input type="submit" value="Search" class="btn" />
-                </div>
+								<div class="form-actions no-color">
+										<p>
+												Търсене: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+										</p>
+										<label>Автори</label>
+										<ul>
+												@{
+														foreach (var author in ViewBag.Authors)
+														{
+																@:<li>
+																		<input type="checkbox" name="selectedAuthors" value="@author.Name" />
+																		@author.Name
+																@:</li>
+														}
+												}
+										</ul>
+										<br>
+										<label>Жанрове</label>
+										<ul>
+											@{
+												foreach(var genre in ViewBag.Genres)
+												{
+													@:<li>
+														<input type="checkbox" name="selectedGenres" value="@genre.Name" />
+														@genre.Name
+													@:</li>
+												}
+											}
+										</ul>
+										<br>
+										<input type="submit" value="Search" class="btn" />
+								</div>
 			</form>
 			
 		</div>
