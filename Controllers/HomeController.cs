@@ -30,12 +30,8 @@ namespace Project.Controllers
 		public async Task<IActionResult> Index()
 		{
 			LoadAuthors();
-<<<<<<< HEAD
-			var mvcBookContext = _context.Books.Include(model => model.Genre).Include(model => model.Stockpile);
-=======
 			LoadGenres();
 			var mvcBookContext = _context.Books.Include(b => b.Genre);
->>>>>>> 0d0de22b9107871631f2af6ed296194c10d2fde9
 			return View(await mvcBookContext.ToListAsync());
 		}
 
