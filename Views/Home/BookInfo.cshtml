@@ -15,6 +15,7 @@
 					@{
 						var src=@Html.DisplayFor(item => item.Cover);
 						var authors="";
+						var genres="";
 					}
 
 					 <img src="~/images/Covers/@src" class="img-fluid">
@@ -30,7 +31,10 @@
 							<span>Автори: @authors</span>
 						</li>
 						<li>
-							<span class="name"> Цена: </span><span class="clm">:</span>
+							<span>Жанр: @Html.DisplayFor(item => item.Genre.Name)</span>
+						</li>
+						<li>
+							<span class="name"> Цена: </span><span class="clm"></span>
 							<span class="price">@Html.DisplayFor(item => item.Price)</span>
 						</li>
 					</ul>
