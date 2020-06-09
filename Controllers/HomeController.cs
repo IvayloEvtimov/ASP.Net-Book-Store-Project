@@ -31,7 +31,7 @@ namespace Project.Controllers
 		{
 			LoadAuthors();
 			LoadGenres();
-			var mvcBookContext = _context.Books.Include(b => b.Genre);
+			var mvcBookContext = _context.Books.Include(model => model.Genre).Include(model => model.Stockpile);
 			return View(await mvcBookContext.ToListAsync());
 		}
 
@@ -138,6 +138,19 @@ namespace Project.Controllers
 			return View(book);
 		}
 
+		public async Task<IActionResult> Clear(){
+			string Customer_Email = HttpContext.Session.GetString("Email");
+			var Customer_ID = (from model in _context.Customers where model.Email == Customer_Email select model.ID)
+				.ToListAsync().Result[0];
+			var MvcBookContext = (from model in _context.Carts where model.Customer_ID== Customer_ID select model).ToArray();
+			foreach(var cart in MvcBookContext){
+				_context.Remove(cart);
+			}
+			await _context.SaveChangesAsync();
+
+			return await Cart();
+		}
+
 		public async Task<IActionResult> Cart()
 		{
 			string Customer_Email = HttpContext.Session.GetString("Email");
@@ -189,7 +202,7 @@ namespace Project.Controllers
 
 							LoadAuthors();
 							LoadGenres();
-							var mvcBookContext = _context.Books.Include(b => b.Genre);
+							var mvcBookContext = _context.Books.Include(b => b.Genre).Include(model => model.Stockpile);
 							return View("Index",await mvcBookContext.ToListAsync());
 						}
 					}
