@@ -48,16 +48,17 @@
 					</tbody>
 				</table>
 				<div class="checkout_btn_inner float-right">
-					<a class="btn_1" asp-action="Index">Continue Shopping</a>
+					<a class="btn_1" asp-action="Index">Продължи към пазаруването</a>
+				
 
-					<a data-fancybox data-src="#modal" href="javascript:;"  class="btn_1 checkout_btn_1" >Proceed to Order</a>
+					<a data-fancybox data-src="#modal" href="javascript:;"  class="btn_1 checkout_btn_1" >Напред към Поръчка</a>
 					<div style="display: none;" id="modal">
 						<div class="order_box">
-							<h2>Your Order</h2>
+							<h2>Твойта Поръчка</h2>
 							<ul class="list">
 								<li>
-									<a href="#">Product
-									<span>Total</span>
+									<a href="#">Книга
+									<span>Общо</span>
 									</a>
 								</li>
 								@foreach (Cart item in Model)
@@ -79,7 +80,7 @@
 							</ul>
 							<ul class="list list_2">
 								<li>
-									<a href="#">Total
+									<a href="#">Общо
 									<span>@totalCost BGN</span>
 									</a>
 								</li>
